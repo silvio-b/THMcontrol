@@ -439,7 +439,7 @@ Schedule:Compact,
 Schedule:File,
     THM_ILL,                 !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_ILL.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_ILL.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -449,7 +449,7 @@ Schedule:File,
 Schedule:File,
     THM_DGP,                 !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_DGP.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_DGP.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -459,7 +459,7 @@ Schedule:File,
 Schedule:File,
     THM_light,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_light.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_light.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -469,7 +469,7 @@ Schedule:File,
 Schedule:File,
     THM_control,             !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_control.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_control.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -479,7 +479,7 @@ Schedule:File,
 Schedule:File,
     DGP_Tvis4,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP4.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP4.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -489,7 +489,7 @@ Schedule:File,
 Schedule:File,
     DGP_Tvis3,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP3.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP3.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -499,7 +499,7 @@ Schedule:File,
 Schedule:File,
     DGP_Tvis2,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP2.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP2.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -509,7 +509,7 @@ Schedule:File,
 Schedule:File,
     DGP_Tvis1,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP1.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP1.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -519,7 +519,7 @@ Schedule:File,
 Schedule:File,
     ILL_Tvis4,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL4_P1_H.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL4_P1_H.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -529,7 +529,7 @@ Schedule:File,
 Schedule:File,
     ILL_Tvis3,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL3_P1_H.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL3_P1_H.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -539,7 +539,7 @@ Schedule:File,
 Schedule:File,
     ILL_Tvis2,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL2_P1_H.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL2_P1_H.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
@@ -549,7 +549,7 @@ Schedule:File,
 Schedule:File,
     ILL_Tvis1,               !- Name
     Any Number,              !- Schedule Type Limits Name
-    C:\Users\SilvioBrandi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL1_P1_H.txt,  !- File Name
+    C:\Users\LUCA SANDRI\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL1_P1_H.txt,  !- File Name
     1,                       !- Column Number
     0,                       !- Rows to Skip at Top
     8760,                    !- Number of Hours of Data
