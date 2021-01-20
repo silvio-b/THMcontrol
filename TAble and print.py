@@ -6,6 +6,8 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import pickle
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 import matplotlib as mpl
 from matplotlib import cm
@@ -55,12 +57,16 @@ df['UDI'] = df['UDI_a']*4 + df['UDI_s']*4                       #Get hourly UDI 
 df['DGP'] = df['DGPoutputcostocc']*4                            #Get DGP parameters
 df['Glare'] = np.where(df['DGP']>0.35, 1, 0)                    #Where Glare disconfort occurs
 df.drop(labels=['UDI_s', 'UDI_a', 'DGPoutputcostocc'], axis=1, inplace=True)
-df['Month'] = 0                                             #Create Month column
+df['Month'] = 0  # Create Month column
+df['DayOfMonth'] = 0  # Create Day Of the Month column
+df['DayOfYear'] = 0  # Create Day Of the Month column
 for i in df.index:
-    df.loc[i, 'Month'] = int(df['Date/Time'].iloc[i].split()[0].split('/')[0])
-df['DayOfMonth'] = 0                                        #Create Day Of the Month column
-for i in df.index:
-    df.loc[i, 'DayOfMonth'] = int(df['Date/Time'].iloc[i].split()[0].split('/')[1])
+    df.loc[i, 'DayOfYear'] = df['Date/Time'].iloc[i].split()[0]
+    df.loc[i, 'Month'] = int(df.loc[i, 'DayOfYear'].split('/')[0])
+    df.loc[i, 'DayOfMonth'] = int(df.loc[i, 'DayOfYear'].split('/')[1])
+print(df[['Month', 'DayOfMonth', 'DayOfYear']])
+
+
 
         #PRINT: Performance parameters
 EPh = df['Ep heat'].sum()
@@ -127,6 +133,11 @@ learning = plt.plot(weeks, reward_curve,  linewidth=4, color='red')
 plt.ylabel('Ep by service')
 plt.legend((p1[0], p2[0], p3[0]), ('Ep heat', 'Ep cool', 'Ep light'))
 
+fig2, ax2 = plt.subplots()
+q_table_cold = np.load(r'C:\Users\LUCA SANDRI\Desktop\Tesi\000_PRATICA\Outputs\cold_table.npy')
+q_table_hot = np.load(r'C:\Users\LUCA SANDRI\Desktop\Tesi\000_PRATICA\Outputs\hot_table.npy')
+sns.heatmap(q_table_cold)
+
 #           Ricompensa e EP(h) per settimana
 #fig2, ax2 = plt.subplots()
 #weeks = list(df_weekly.index)
@@ -172,6 +183,8 @@ x_axis = list(range(len(df_hot_daily.index)))
 reward_curve = df_hot_daily['Reward']
 ax5.plot(x_axis, reward_curve,  linewidth=1, color='red')
 ax5.set_title('Hot season')
+
+
 
 
 plt.show()
