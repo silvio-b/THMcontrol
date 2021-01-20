@@ -57,16 +57,17 @@ df['UDI'] = df['UDI_a']*4 + df['UDI_s']*4                       #Get hourly UDI 
 df['DGP'] = df['DGPoutputcostocc']*4                            #Get DGP parameters
 df['Glare'] = np.where(df['DGP']>0.35, 1, 0)                    #Where Glare disconfort occurs
 df.drop(labels=['UDI_s', 'UDI_a', 'DGPoutputcostocc'], axis=1, inplace=True)
-df['Month'] = 0  # Create Month column
-df['DayOfMonth'] = 0  # Create Day Of the Month column
-df['DayOfYear'] = 0  # Create Day Of the Month column
+df['Month'] = 0                                             #Create Month column
+df['DayOfMonth'] = 0                                        #Create Day Of the Month column
+df['DayOfYear'] = 0                                        #Create Day Of the Month column
 for i in df.index:
     df.loc[i, 'DayOfYear'] = df['Date/Time'].iloc[i].split()[0]
-    df.loc[i, 'Month'] = int(df.loc[i, 'DayOfYear'].split('/')[0])
+    df.loc[i,'Month'] = int(df.loc[i, 'DayOfYear'].split('/')[0])
     df.loc[i, 'DayOfMonth'] = int(df.loc[i, 'DayOfYear'].split('/')[1])
-print(df[['Month', 'DayOfMonth', 'DayOfYear']])
-
-
+    if not (df.loc[i, 'TimeOfDay'] % 1) == 0:
+        prev = df.loc[(i-1), 'TimeOfDay']
+        next = df.loc[(i+1), 'TimeOfDay']
+        df.loc[i, 'TimeOfDay'] = (prev+next)/2
 
         #PRINT: Performance parameters
 EPh = df['Ep heat'].sum()
@@ -87,8 +88,6 @@ DGP = df_occ['DGP'].mean()*100
 Glares = df_occ['Glare'].mean()*100
 print("UDI = {:.5} %, DGP = {:.5} %, Glares = {:.5} %".format(UDI, DGP, Glares))
 
-print(df['Cumulated R'].head(10))
-
         #Organize: by Day
 def byDay(df):
     df_byDay = df.drop(['Date/Time', 'DayOfWeek', 'TimeOfDay'], axis=1)
@@ -103,8 +102,6 @@ df_hot_daily = byDay(df_hot)
 df_cold_daily = byDay(df_cold)
 df_daily = byDay(df)
 
-print(df_daily['Cumulated R'].head(10))
-
 def byWeek(df):
     if not len(df) == 365:
         print('Error: Organizing by week requires a daily index')
@@ -116,8 +113,6 @@ def byWeek(df):
         return df_byWeek
 
 df_weekly = byWeek(df_daily)
-
-print(df_weekly['Cumulated R'].head(10))
 
 #_________________________________________________________________________________
 
@@ -134,9 +129,10 @@ plt.ylabel('Ep by service')
 plt.legend((p1[0], p2[0], p3[0]), ('Ep heat', 'Ep cool', 'Ep light'))
 
 fig2, ax2 = plt.subplots()
+carpet = df.pivot(index='DayOfYear', columns='TimeOfDay', values='EC state')
 q_table_cold = np.load(r'C:\Users\LUCA SANDRI\Desktop\Tesi\000_PRATICA\Outputs\cold_table.npy')
 q_table_hot = np.load(r'C:\Users\LUCA SANDRI\Desktop\Tesi\000_PRATICA\Outputs\hot_table.npy')
-sns.heatmap(q_table_cold)
+sns.heatmap(carpet)
 
 #           Ricompensa e EP(h) per settimana
 #fig2, ax2 = plt.subplots()
