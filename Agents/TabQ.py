@@ -14,8 +14,7 @@ class TabularQLearning:
         self.action_space_shape = action_space_shape
         self.state_space_shape = state_space_shape
 
-
-        self.action_space = [i for i in range(0,self.action_space_shape)]
+        self.action_space = [i for i in range(0, self.action_space_shape)]
 
         self.q_table = np.zeros((self.state_space_shape, self.action_space_shape))
         # self.q_table = np.random.randn(self.state_space_shape, self.action_space_shape)
@@ -37,7 +36,7 @@ class TabularQLearning:
 
         return action
 
-    def get_softmax_action(self, state_index):
+    def get_softmax_action(self, state_index, temp):
 
 #        '''This want to decrease the temperatures of the seasonal agents separately'''
 #        if self.season == 0:
@@ -49,10 +48,8 @@ class TabularQLearning:
 #            self.temp_hot -= self.temp_hot + ( (0.5-self.temp_hot)/1000 )
 #            temp = self.temp_hot
 
-        '''if not using the above code, use following line:'''
-        temp = self.temp_cold
 
-        scores = self.q_table_cold[state_index]
+        scores = self.q_table[state_index]
         e_scores = np.exp(scores/temp)
         probs = e_scores / e_scores.sum()
         action = np.random.choice(self.action_space, p=probs)

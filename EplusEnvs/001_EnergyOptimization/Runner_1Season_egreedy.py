@@ -93,7 +93,8 @@ while kStep < MAXSTEPS:
                      next_state_index=next_state_index,
                      reward=reward)
 
-    BCVTB_THM_CONTROL = TQL.get_greedy_action(next_state_index)
+    BCVTB_THM_CONTROL = TQL.get_e_greedy_action(next_state_index,
+                                                eps=0.1)
 
     inputs = [BCVTB_THM_CONTROL + 1]
     input_packet = ep.encode_packet_simple(inputs, time)
