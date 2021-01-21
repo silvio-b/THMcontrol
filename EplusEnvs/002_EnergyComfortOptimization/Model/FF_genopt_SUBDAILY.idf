@@ -1,0 +1,2602 @@
+!-Generator IDFEditor 1.50
+!-Option SortedOrder
+
+!-NOTE: All comments with '!-' are ignored by the IDFEditor and are generated automatically.
+!-      Use '!' comments if they need to be retained when using the IDFEditor.
+
+
+!-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
+
+! Introduction to EnergyPlus - Exercise 1D
+!
+! Building: Fictional 1 zone building with lightweight walls and 1 windows.
+!           3m x 5m x 3.5m high, long side facing N and S
+!           Windows on south wall
+!           20C heating, 26C cooling
+!
+!
+Version,
+    9.2;                     !- Version Identifier
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
+
+SimulationControl,
+    Yes,                     !- Do Zone Sizing Calculation
+    No,                      !- Do System Sizing Calculation
+    No,                      !- Do Plant Sizing Calculation
+    No,                      !- Run Simulation for Sizing Periods
+    Yes;                     !- Run Simulation for Weather File Run Periods
+
+
+!-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
+
+Building,
+    London Office,           !- Name
+    180,                     !- North Axis {deg}
+    City,                    !- Terrain
+    0.04,                    !- Loads Convergence Tolerance Value
+    0.01,                    !- Temperature Convergence Tolerance Value {deltaC}
+    FullInteriorAndExterior, !- Solar Distribution
+    25,                      !- Maximum Number of Warmup Days
+    6;                       !- Minimum Number of Warmup Days
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SURFACECONVECTIONALGORITHM:INSIDE ===========
+
+SurfaceConvectionAlgorithm:Inside,
+    TARP;                    !- Algorithm
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SURFACECONVECTIONALGORITHM:OUTSIDE ===========
+
+SurfaceConvectionAlgorithm:Outside,
+    TARP;                    !- Algorithm
+
+
+!-   ===========  ALL OBJECTS IN CLASS: HEATBALANCEALGORITHM ===========
+
+HeatBalanceAlgorithm,
+    ConductionTransferFunction;  !- Algorithm
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEAIRCONTAMINANTBALANCE ===========
+
+ZoneAirContaminantBalance,
+    Yes,                     !- Carbon Dioxide Concentration
+    outdoor CO2 schedule;    !- Outdoor Carbon Dioxide Schedule Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: TIMESTEP ===========
+
+Timestep,
+    1;                       !- Number of Timesteps per Hour
+
+
+!-   ===========  ALL OBJECTS IN CLASS: RUNPERIOD ===========
+
+RunPeriod,
+    period 1,                !- Name
+    1,                       !- Begin Month
+    1,                       !- Begin Day of Month
+    ,                        !- Begin Year
+    12,                      !- End Month
+    31,                      !- End Day of Month
+    ,                        !- End Year
+    ,                        !- Day of Week for Start Day
+    Yes,                     !- Use Weather File Holidays and Special Days
+    Yes,                     !- Use Weather File Daylight Saving Period
+    No,                      !- Apply Weekend Holiday Rule
+    Yes,                     !- Use Weather File Rain Indicators
+    Yes;                     !- Use Weather File Snow Indicators
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SCHEDULETYPELIMITS ===========
+
+ScheduleTypeLimits,
+    On/Off,                  !- Name
+    0.0,                     !- Lower Limit Value
+    1.0,                     !- Upper Limit Value
+    Discrete;                !- Numeric Type
+
+ScheduleTypeLimits,
+    Temperature,             !- Name
+    -60,                     !- Lower Limit Value
+    200,                     !- Upper Limit Value
+    Continuous;              !- Numeric Type
+
+ScheduleTypeLimits,
+    Fraction,                !- Name
+    0.0,                     !- Lower Limit Value
+    1.0,                     !- Upper Limit Value
+    Continuous;              !- Numeric Type
+
+ScheduleTypeLimits,
+    Any Number;              !- Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SCHEDULE:COMPACT ===========
+
+Schedule:Compact,
+    window opening,          !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays SummerDesignDay,  !- Field 2
+    Until: 07:00,            !- Field 3
+    0.0,                     !- Field 4
+    Until: 08:00,            !- Field 5
+    1,                       !- Field 6
+    Until: 12:00,            !- Field 7
+    1,                       !- Field 8
+    Until: 13:00,            !- Field 9
+    1,                       !- Field 10
+    Until: 17:00,            !- Field 11
+    1,                       !- Field 12
+    Until: 18:00,            !- Field 13
+    1,                       !- Field 14
+    Until: 22:00,            !- Field 15
+    1,                       !- Field 16
+    Until: 24:00,            !- Field 17
+    0,                       !- Field 18
+    For: Saturday,           !- Field 19
+    Until: 07:00,            !- Field 20
+    0.0,                     !- Field 21
+    Until: 08:00,            !- Field 22
+    1,                       !- Field 23
+    Until: 12:00,            !- Field 24
+    1,                       !- Field 25
+    Until: 17:00,            !- Field 26
+    1,                       !- Field 27
+    Until: 18:00,            !- Field 28
+    1,                       !- Field 29
+    Until: 24:00,            !- Field 30
+    0.0,                     !- Field 31
+    For: Sunday Holidays WinterDesignDay AllOtherDays,  !- Field 32
+    Until: 24:00,            !- Field 33
+    0.0;                     !- Field 34
+
+Schedule:Compact,
+    ALWAYS 1,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    1;                       !- Field 4
+
+Schedule:Compact,
+    outdoor CO2 schedule,    !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    389;                     !- Field 4
+
+Schedule:Compact,
+    ALWAYS 0,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    0;                       !- Field 4
+
+Schedule:Compact,
+    ALWAYS 0.05,             !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    .05;                     !- Field 4
+
+Schedule:Compact,
+    clothes insulation,      !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 4/30,           !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    .85,                     !- Field 4
+    Through: 9/30,           !- Field 5
+    For: AllDays,            !- Field 6
+    Until: 24:00,            !- Field 7
+    .7,                      !- Field 8
+    Through: 12/31,          !- Field 9
+    For: AllDays,            !- Field 10
+    Until: 24:00,            !- Field 11
+    .85;                     !- Field 12
+
+Schedule:Compact,
+    Office Lighting,         !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays SummerDesignDay,  !- Field 2
+    Until: 05:00,            !- Field 3
+    0.05,                    !- Field 4
+    Until: 07:00,            !- Field 5
+    0.1,                     !- Field 6
+    Until: 08:00,            !- Field 7
+    0.3,                     !- Field 8
+    Until: 17:00,            !- Field 9
+    0.9,                     !- Field 10
+    Until: 18:00,            !- Field 11
+    0.5,                     !- Field 12
+    Until: 20:00,            !- Field 13
+    0.3,                     !- Field 14
+    Until: 22:00,            !- Field 15
+    0.2,                     !- Field 16
+    Until: 23:00,            !- Field 17
+    0.1,                     !- Field 18
+    Until: 24:00,            !- Field 19
+    0.05,                    !- Field 20
+    For: Saturday WinterDesignDay,  !- Field 21
+    Until: 06:00,            !- Field 22
+    0.05,                    !- Field 23
+    Until: 08:00,            !- Field 24
+    0.1,                     !- Field 25
+    Until: 12:00,            !- Field 26
+    0.3,                     !- Field 27
+    Until: 17:00,            !- Field 28
+    0.15,                    !- Field 29
+    Until: 24:00,            !- Field 30
+    0.05,                    !- Field 31
+    For: Sunday Holidays AllOtherDays,  !- Field 32
+    Until: 24:00,            !- Field 33
+    0.05;                    !- Field 34
+
+Schedule:Compact,
+    ALWAYS 4,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    4;                       !- Field 4
+
+Schedule:Compact,
+    ActSchd,                 !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    125;                     !- Field 4
+
+Schedule:Compact,
+    Office Occupancy 2,      !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays SummerDesignDay,  !- Field 2
+    Until: 07:00,            !- Field 3
+    0.0,                     !- Field 4
+    Until: 08:00,            !- Field 5
+    0.2,                     !- Field 6
+    Until: 12:00,            !- Field 7
+    0.95,                    !- Field 8
+    Until: 13:00,            !- Field 9
+    0.5,                     !- Field 10
+    Until: 17:00,            !- Field 11
+    0.95,                    !- Field 12
+    Until: 18:00,            !- Field 13
+    0.3,                     !- Field 14
+    Until: 22:00,            !- Field 15
+    0.1,                     !- Field 16
+    Until: 24:00,            !- Field 17
+    0.0,                     !- Field 18
+    For: Saturday,           !- Field 19
+    Until: 07:00,            !- Field 20
+    0.0,                     !- Field 21
+    Until: 08:00,            !- Field 22
+    0.1,                     !- Field 23
+    Until: 12:00,            !- Field 24
+    0.3,                     !- Field 25
+    Until: 17:00,            !- Field 26
+    0.1,                     !- Field 27
+    Until: 18:00,            !- Field 28
+    0.05,                    !- Field 29
+    Until: 24:00,            !- Field 30
+    0.0,                     !- Field 31
+    For: Sunday Holidays WinterDesignDay AllOtherDays,  !- Field 32
+    Until: 24:00,            !- Field 33
+    0.0;                     !- Field 34
+
+Schedule:Compact,
+    Office HVAC,             !- Name
+    on/off,                  !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays SummerDesignDay,  !- Field 2
+    Until: 06:00,            !- Field 3
+    0.0,                     !- Field 4
+    Until: 22:00,            !- Field 5
+    1.0,                     !- Field 6
+    Until: 24:00,            !- Field 7
+    0.0,                     !- Field 8
+    For: Saturday WinterDesignDay,  !- Field 9
+    Until: 06:00,            !- Field 10
+    0.0,                     !- Field 11
+    Until: 18:00,            !- Field 12
+    1.0,                     !- Field 13
+    Until: 24:00,            !- Field 14
+    0.0,                     !- Field 15
+    For: Sunday Holidays AllOtherDays,  !- Field 16
+    Until: 24:00,            !- Field 17
+    0.0;                     !- Field 18
+
+Schedule:Compact,
+    Office Heating Setpoints,!- Name
+    Temperature,             !- Schedule Type Limits Name
+    Through: 4/30,           !- Field 1
+    For: Weekdays,           !- Field 2
+    Until: 06:00,            !- Field 3
+    12.8,                    !- Field 4
+    Until: 22:00,            !- Field 5
+    20,                      !- Field 6
+    Until: 24:00,            !- Field 7
+    12.8,                    !- Field 8
+    For: Saturday,           !- Field 9
+    Until: 06:00,            !- Field 10
+    12.8,                    !- Field 11
+    Until: 18:00,            !- Field 12
+    20,                      !- Field 13
+    Until: 24:00,            !- Field 14
+    12.8,                    !- Field 15
+    For: Sunday Holidays AllOtherDays,  !- Field 16
+    Until: 24:00,            !- Field 17
+    12.8,                    !- Field 18
+    Through: 9/30,           !- Field 19
+    For: Weekdays,           !- Field 20
+    Until: 06:00,            !- Field 21
+    12.8,                    !- Field 22
+    Until: 22:00,            !- Field 23
+    20,                      !- Field 24
+    Until: 24:00,            !- Field 25
+    12.8,                    !- Field 26
+    For: Saturday,           !- Field 27
+    Until: 06:00,            !- Field 28
+    12.8,                    !- Field 29
+    Until: 18:00,            !- Field 30
+    20,                      !- Field 31
+    Until: 24:00,            !- Field 32
+    12.8,                    !- Field 33
+    For: Sunday Holidays AllOtherDays,  !- Field 34
+    Until: 24:00,            !- Field 35
+    12.8,                    !- Field 36
+    Through: 12/31,          !- Field 37
+    For: Weekdays,           !- Field 38
+    Until: 06:00,            !- Field 39
+    12.8,                    !- Field 40
+    Until: 22:00,            !- Field 41
+    20,                      !- Field 42
+    Until: 24:00,            !- Field 43
+    12.8,                    !- Field 44
+    For: Saturday,           !- Field 45
+    Until: 06:00,            !- Field 46
+    12.8,                    !- Field 47
+    Until: 18:00,            !- Field 48
+    20,                      !- Field 49
+    Until: 24:00,            !- Field 50
+    12.8,                    !- Field 51
+    For: Sunday Holidays AllOtherDays,  !- Field 52
+    Until: 24:00,            !- Field 53
+    12.8;                    !- Field 54
+
+Schedule:Compact,
+    Office Cooling Setpoints,!- Name
+    Temperature,             !- Schedule Type Limits Name
+    Through: 4/30,           !- Field 1
+    For: Weekdays,           !- Field 2
+    Until: 06:00,            !- Field 3
+    40,                      !- Field 4
+    Until: 22:00,            !- Field 5
+    26,                      !- Field 6
+    Until: 24:00,            !- Field 7
+    40,                      !- Field 8
+    For: Saturday,           !- Field 9
+    Until: 06:00,            !- Field 10
+    40,                      !- Field 11
+    Until: 18:00,            !- Field 12
+    26,                      !- Field 13
+    Until: 24:00,            !- Field 14
+    40,                      !- Field 15
+    For: Sunday Holidays AllOtherDays,  !- Field 16
+    Until: 24:00,            !- Field 17
+    40,                      !- Field 18
+    Through: 9/30,           !- Field 19
+    For: Weekdays,           !- Field 20
+    Until: 06:00,            !- Field 21
+    40,                      !- Field 22
+    Until: 22:00,            !- Field 23
+    26,                      !- Field 24
+    Until: 24:00,            !- Field 25
+    40,                      !- Field 26
+    For: Saturday,           !- Field 27
+    Until: 06:00,            !- Field 28
+    40,                      !- Field 29
+    Until: 18:00,            !- Field 30
+    26,                      !- Field 31
+    Until: 24:00,            !- Field 32
+    40,                      !- Field 33
+    For: Sunday Holidays AllOtherDays,  !- Field 34
+    Until: 24:00,            !- Field 35
+    40,                      !- Field 36
+    Through: 12/31,          !- Field 37
+    For: Weekdays,           !- Field 38
+    Until: 06:00,            !- Field 39
+    40,                      !- Field 40
+    Until: 22:00,            !- Field 41
+    26,                      !- Field 42
+    Until: 24:00,            !- Field 43
+    40,                      !- Field 44
+    For: Saturday,           !- Field 45
+    Until: 06:00,            !- Field 46
+    40,                      !- Field 47
+    Until: 18:00,            !- Field 48
+    26,                      !- Field 49
+    Until: 24:00,            !- Field 50
+    40,                      !- Field 51
+    For: Sunday Holidays AllOtherDays,  !- Field 52
+    Until: 24:00,            !- Field 53
+    40;                      !- Field 54
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SCHEDULE:FILE ===========
+
+Schedule:File,
+    THM_ILL,                 !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_ILL.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    THM_DGP,                 !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_DGP.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    THM_light,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_light.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    THM_control,             !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\THM_control.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    DGP_Tvis4,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP4.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    DGP_Tvis3,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP3.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    DGP_Tvis2,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP2.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    DGP_Tvis1,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\DGP1.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    ILL_Tvis4,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL4_P1_H.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    ILL_Tvis3,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL3_P1_H.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    ILL_Tvis2,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL2_P1_H.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+Schedule:File,
+    ILL_Tvis1,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    C:\Users\silvi\PycharmProjects\THMcontrol\EnergyPlusFiles\Control_London_Passive\ILL1_P1_H.txt,  !- File Name
+    1,                       !- Column Number
+    0,                       !- Rows to Skip at Top
+    8760,                    !- Number of Hours of Data
+    Comma,                   !- Column Separator
+    Yes;                     !- Interpolate to Timestep
+
+
+!-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
+
+Material,
+    Render External,         !- Name
+    Smooth,                  !- Roughness
+    0.02,                    !- Thickness {m}
+    0.57,                    !- Conductivity {W/m-K}
+    1300,                    !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.5,                     !- Solar Absorptance
+    0.5;                     !- Visible Absorptance
+
+Material,
+    Mineral Wool W,          !- Name
+    MediumRough,             !- Roughness
+    0.12,                    !- Thickness {m}
+    0.04,                    !- Conductivity {W/m-K}
+    25,                      !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.16,                    !- Solar Absorptance
+    0.16;                    !- Visible Absorptance
+
+Material,
+    Glass,                   !- Name
+    MediumSmooth,            !- Roughness
+    0.012,                   !- Thickness {m}
+    0.9,                     !- Conductivity {W/m-K}
+    2500,                    !- Density {kg/m3}
+    840,                     !- Specific Heat {J/kg-K}
+    0.7,                     !- Thermal Absorptance
+    0.5,                     !- Solar Absorptance
+    0.5;                     !- Visible Absorptance
+
+Material,
+    Mineral Wool PW,         !- Name
+    MediumRough,             !- Roughness
+    0.05,                    !- Thickness {m}
+    0.04,                    !- Conductivity {W/m-K}
+    25,                      !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.16,                    !- Solar Absorptance
+    0.16;                    !- Visible Absorptance
+
+Material,
+    Brickwork,               !- Name
+    MediumSmooth,            !- Roughness
+    0.102,                   !- Thickness {m}
+    0.77,                    !- Conductivity {W/m-K}
+    1700,                    !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.5,                     !- Solar Absorptance
+    0.5;                     !- Visible Absorptance
+
+Material,
+    Concrete Wall,           !- Name
+    MediumSmooth,            !- Roughness
+    0.100,                   !- Thickness {m}
+    1.13,                    !- Conductivity {W/m-K}
+    2000,                    !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.5,                     !- Solar Absorptance
+    0.5;                     !- Visible Absorptance
+
+Material,
+    Plasterboard,            !- Name
+    MediumSmooth,            !- Roughness
+    0.013,                   !- Thickness {m}
+    0.21,                    !- Conductivity {W/m-K}
+    900,                     !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.16,                    !- Solar Absorptance
+    0.16;                    !- Visible Absorptance
+
+Material,
+    Concrete slab,           !- Name
+    MediumRough,             !- Roughness
+    0.150,                   !- Thickness {m}
+    1.35,                    !- Conductivity {W/m-K}
+    2400,                    !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.5,                     !- Solar Absorptance
+    0.5;                     !- Visible Absorptance
+
+Material,
+    Ceiling tile,            !- Name
+    Smooth,                  !- Roughness
+    0.015,                   !- Thickness {m}
+    0.09,                    !- Conductivity {W/m-K}
+    250,                     !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.12,                    !- Solar Absorptance
+    0.12;                    !- Visible Absorptance
+
+Material,
+    Flooring Screed,         !- Name
+    Rough,                   !- Roughness
+    0.050,                   !- Thickness {m}
+    0.41,                    !- Conductivity {W/m-K}
+    1200,                    !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.4,                     !- Solar Absorptance
+    0.4;                     !- Visible Absorptance
+
+
+!-   ===========  ALL OBJECTS IN CLASS: MATERIAL:AIRGAP ===========
+
+Material:AirGap,
+    air gap 25 mm,           !- Name
+    0.18;                    !- Thermal Resistance {m2-K/W}
+
+Material:AirGap,
+    air gap 400 mm,          !- Name
+    0.18;                    !- Thermal Resistance {m2-K/W}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM ===========
+
+WindowMaterial:SimpleGlazingSystem,
+    Window1,                 !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.21636,                 !- Solar Heat Gain Coefficient
+    0.238;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window2,                 !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.31,                    !- Solar Heat Gain Coefficient
+    0.341;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window3,                 !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.40545,                 !- Solar Heat Gain Coefficient
+    0.446;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window4,                 !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.54091,                 !- Solar Heat Gain Coefficient
+    0.595;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window0_3,               !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.02,                    !- Solar Heat Gain Coefficient
+    0.02;                    !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window3_6,               !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.02,                    !- Solar Heat Gain Coefficient
+    0.02;                    !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window6_7,               !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.40545454545454546,     !- Solar Heat Gain Coefficient
+    0.446;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window7_8,               !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.21636363636363634,     !- Solar Heat Gain Coefficient
+    0.238;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window8_9,               !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.31,                    !- Solar Heat Gain Coefficient
+    0.341;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window9_10,              !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.21636363636363634,     !- Solar Heat Gain Coefficient
+    0.238;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window10_11,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.5409090909090909,      !- Solar Heat Gain Coefficient
+    0.595;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window11_12,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.5409090909090909,      !- Solar Heat Gain Coefficient
+    0.595;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window12_13,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.40545454545454546,     !- Solar Heat Gain Coefficient
+    0.446;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window13_14,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.40545454545454546,     !- Solar Heat Gain Coefficient
+    0.446;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window14_15,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.31,                    !- Solar Heat Gain Coefficient
+    0.341;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window15_16,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.40545454545454546,     !- Solar Heat Gain Coefficient
+    0.446;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window16_17,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.31,                    !- Solar Heat Gain Coefficient
+    0.341;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window17_18,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.5409090909090909,      !- Solar Heat Gain Coefficient
+    0.595;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window18_19,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.31,                    !- Solar Heat Gain Coefficient
+    0.341;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window19_20,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.5409090909090909,      !- Solar Heat Gain Coefficient
+    0.595;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window20_21,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.40545454545454546,     !- Solar Heat Gain Coefficient
+    0.446;                   !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+    Window21_24,             !- Name
+    2,                       !- U-Factor {W/m2-K}
+    0.02,                    !- Solar Heat Gain Coefficient
+    0.02;                    !- Visible Transmittance
+
+
+!-   ===========  ALL OBJECTS IN CLASS: CONSTRUCTION ===========
+
+Construction,
+    window1,                 !- Name
+    Window1;                 !- Outside Layer
+
+Construction,
+    window2,                 !- Name
+    Window2;                 !- Outside Layer
+
+Construction,
+    window3,                 !- Name
+    Window3;                 !- Outside Layer
+
+Construction,
+    window4,                 !- Name
+    Window4;                 !- Outside Layer
+
+Construction,
+    window0_3,               !- Name
+    Window0_3;               !- Outside Layer
+
+Construction,
+    window3_6,               !- Name
+    Window3_6;               !- Outside Layer
+
+Construction,
+    window6_7,               !- Name
+    Window6_7;               !- Outside Layer
+
+Construction,
+    window7_8,               !- Name
+    Window7_8;               !- Outside Layer
+
+Construction,
+    window8_9,               !- Name
+    Window8_9;               !- Outside Layer
+
+Construction,
+    window9_10,              !- Name
+    Window9_10;              !- Outside Layer
+
+Construction,
+    window10_11,             !- Name
+    Window10_11;             !- Outside Layer
+
+Construction,
+    window11_12,             !- Name
+    Window11_12;             !- Outside Layer
+
+Construction,
+    window12_13,             !- Name
+    Window12_13;             !- Outside Layer
+
+Construction,
+    window13_14,             !- Name
+    Window13_14;             !- Outside Layer
+
+Construction,
+    window14_15,             !- Name
+    Window14_15;             !- Outside Layer
+
+Construction,
+    window15_16,             !- Name
+    Window15_16;             !- Outside Layer
+
+Construction,
+    window16_17,             !- Name
+    Window16_17;             !- Outside Layer
+
+Construction,
+    window17_18,             !- Name
+    Window17_18;             !- Outside Layer
+
+Construction,
+    window18_19,             !- Name
+    Window18_19;             !- Outside Layer
+
+Construction,
+    window19_20,             !- Name
+    Window19_20;             !- Outside Layer
+
+Construction,
+    window20_21,             !- Name
+    Window20_21;             !- Outside Layer
+
+Construction,
+    window21_24,             !- Name
+    Window21_24;             !- Outside Layer
+
+Construction,
+    South Wall,              !- Name
+    Render External,         !- Outside Layer
+    Brickwork,               !- Layer 2
+    Mineral Wool W,          !- Layer 3
+    Concrete Wall,           !- Layer 4
+    air gap 25 mm,           !- Layer 5
+    Plasterboard;            !- Layer 6
+
+Construction,
+    South Wall CW,           !- Name
+    Glass,                   !- Outside Layer
+    Mineral Wool W,          !- Layer 2
+    Glass;                   !- Layer 3
+
+Construction,
+    partition wall,          !- Name
+    Plasterboard,            !- Outside Layer
+    Mineral Wool PW,         !- Layer 2
+    Plasterboard;            !- Layer 3
+
+Construction,
+    Floor,                   !- Name
+    Flooring Screed,         !- Outside Layer
+    Concrete slab,           !- Layer 2
+    air gap 400 mm,          !- Layer 3
+    Ceiling tile;            !- Layer 4
+
+Construction,
+    Ceiling,                 !- Name
+    Flooring Screed,         !- Outside Layer
+    Concrete Slab,           !- Layer 2
+    air gap 400 mm,          !- Layer 3
+    Ceiling tile;            !- Layer 4
+
+
+!-   ===========  ALL OBJECTS IN CLASS: GLOBALGEOMETRYRULES ===========
+
+GlobalGeometryRules,
+    UpperLeftCorner,         !- Starting Vertex Position
+    Counterclockwise,        !- Vertex Entry Direction
+    Relative;                !- Coordinate System
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONE ===========
+
+Zone,
+    ZONE ONE,                !- Name
+    0,                       !- Direction of Relative North {deg}
+    0,                       !- X Origin {m}
+    0,                       !- Y Origin {m}
+    0,                       !- Z Origin {m}
+    1,                       !- Type
+    1,                       !- Multiplier
+    autocalculate,           !- Ceiling Height {m}
+    autocalculate;           !- Volume {m3}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
+
+BuildingSurface:Detailed,
+    partition wall 1,        !- Name
+    Wall,                    !- Surface Type
+    partition wall,          !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    autocalculate,           !- View Factor to Ground
+    autocalculate,           !- Number of Vertices
+    4,                       !- Vertex 1 X-coordinate {m}
+    0,                       !- Vertex 1 Y-coordinate {m}
+    3.5,                     !- Vertex 1 Z-coordinate {m}
+    4,                       !- Vertex 2 X-coordinate {m}
+    0,                       !- Vertex 2 Y-coordinate {m}
+    0,                       !- Vertex 2 Z-coordinate {m}
+    4,                       !- Vertex 3 X-coordinate {m}
+    8,                       !- Vertex 3 Y-coordinate {m}
+    0,                       !- Vertex 3 Z-coordinate {m}
+    4,                       !- Vertex 4 X-coordinate {m}
+    8,                       !- Vertex 4 Y-coordinate {m}
+    3.5;                     !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+    partition wall 2,        !- Name
+    Wall,                    !- Surface Type
+    partition wall,          !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    autocalculate,           !- View Factor to Ground
+    autocalculate,           !- Number of Vertices
+    0,                       !- Vertex 1 X-coordinate {m}
+    0,                       !- Vertex 1 Y-coordinate {m}
+    3.5,                     !- Vertex 1 Z-coordinate {m}
+    0,                       !- Vertex 2 X-coordinate {m}
+    0,                       !- Vertex 2 Y-coordinate {m}
+    0,                       !- Vertex 2 Z-coordinate {m}
+    4,                       !- Vertex 3 X-coordinate {m}
+    0,                       !- Vertex 3 Y-coordinate {m}
+    0,                       !- Vertex 3 Z-coordinate {m}
+    4,                       !- Vertex 4 X-coordinate {m}
+    0,                       !- Vertex 4 Y-coordinate {m}
+    3.5;                     !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+    partition wall 3,        !- Name
+    Wall,                    !- Surface Type
+    partition wall,          !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    autocalculate,           !- View Factor to Ground
+    autocalculate,           !- Number of Vertices
+    0,                       !- Vertex 1 X-coordinate {m}
+    8,                       !- Vertex 1 Y-coordinate {m}
+    3.5,                     !- Vertex 1 Z-coordinate {m}
+    0,                       !- Vertex 2 X-coordinate {m}
+    8,                       !- Vertex 2 Y-coordinate {m}
+    0,                       !- Vertex 2 Z-coordinate {m}
+    0,                       !- Vertex 3 X-coordinate {m}
+    0,                       !- Vertex 3 Y-coordinate {m}
+    0,                       !- Vertex 3 Z-coordinate {m}
+    0,                       !- Vertex 4 X-coordinate {m}
+    0,                       !- Vertex 4 Y-coordinate {m}
+    3.5;                     !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+    Floor 1,                 !- Name
+    Floor,                   !- Surface Type
+    Floor,                   !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    autocalculate,           !- View Factor to Ground
+    autocalculate,           !- Number of Vertices
+    4,                       !- Vertex 1 X-coordinate {m}
+    0,                       !- Vertex 1 Y-coordinate {m}
+    0,                       !- Vertex 1 Z-coordinate {m}
+    0,                       !- Vertex 2 X-coordinate {m}
+    0,                       !- Vertex 2 Y-coordinate {m}
+    0,                       !- Vertex 2 Z-coordinate {m}
+    0,                       !- Vertex 3 X-coordinate {m}
+    8,                       !- Vertex 3 Y-coordinate {m}
+    0,                       !- Vertex 3 Z-coordinate {m}
+    4,                       !- Vertex 4 X-coordinate {m}
+    8,                       !- Vertex 4 Y-coordinate {m}
+    0;                       !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+    Ceiling 1,               !- Name
+    Ceiling,                 !- Surface Type
+    Ceiling,                 !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    autocalculate,           !- View Factor to Ground
+    autocalculate,           !- Number of Vertices
+    0,                       !- Vertex 1 X-coordinate {m}
+    8,                       !- Vertex 1 Y-coordinate {m}
+    3.5,                     !- Vertex 1 Z-coordinate {m}
+    0,                       !- Vertex 2 X-coordinate {m}
+    0,                       !- Vertex 2 Y-coordinate {m}
+    3.5,                     !- Vertex 2 Z-coordinate {m}
+    4,                       !- Vertex 3 X-coordinate {m}
+    0,                       !- Vertex 3 Y-coordinate {m}
+    3.5,                     !- Vertex 3 Z-coordinate {m}
+    4,                       !- Vertex 4 X-coordinate {m}
+    8,                       !- Vertex 4 Y-coordinate {m}
+    3.5;                     !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+    External Wall,           !- Name
+    Wall,                    !- Surface Type
+    South Wall CW,           !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    autocalculate,           !- View Factor to Ground
+    autocalculate,           !- Number of Vertices
+    4,                       !- Vertex 1 X-coordinate {m}
+    8,                       !- Vertex 1 Y-coordinate {m}
+    3.5,                     !- Vertex 1 Z-coordinate {m}
+    4,                       !- Vertex 2 X-coordinate {m}
+    8,                       !- Vertex 2 Y-coordinate {m}
+    0,                       !- Vertex 2 Z-coordinate {m}
+    0,                       !- Vertex 3 X-coordinate {m}
+    8,                       !- Vertex 3 Y-coordinate {m}
+    0,                       !- Vertex 3 Z-coordinate {m}
+    0,                       !- Vertex 4 X-coordinate {m}
+    8,                       !- Vertex 4 Y-coordinate {m}
+    3.5;                     !- Vertex 4 Z-coordinate {m}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: FENESTRATIONSURFACE:DETAILED ===========
+
+!WindowMaterial:SimpleGlazingSystem,
+!    Window_warm,             !- Name
+!    %U_THM_warm%,                   !- U-Factor {W/m2-K}
+!    %g_THM_warm%,                    !- Solar Heat Gain Coefficient
+!    %Tvis_THM_warm%;                    !- Visible Transmittance
+!Construction,
+!    window_warm,             !- Name
+!    Window_warm;             !- Outside Layer
+FenestrationSurface:Detailed,
+    Adaptive Glass,          !- Name
+    Window,                  !- Surface Type
+    window3,                 !- Construction Name
+    External Wall,           !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Frame and Divider Name
+    1,                       !- Multiplier
+    autocalculate,           !- Number of Vertices
+    3.99,                    !- Vertex 1 X-coordinate {m}
+    8,                       !- Vertex 1 Y-coordinate {m}
+    3.0106,                  !- Vertex 1 Z-coordinate {m}
+    3.99,                    !- Vertex 2 X-coordinate {m}
+    8,                       !- Vertex 2 Y-coordinate {m}
+    0.9,                     !- Vertex 2 Z-coordinate {m}
+    0.01,                    !- Vertex 3 X-coordinate {m}
+    8,                       !- Vertex 3 Y-coordinate {m}
+    0.9,                     !- Vertex 3 Z-coordinate {m}
+    0.01,                    !- Vertex 4 X-coordinate {m}
+    8,                       !- Vertex 4 Y-coordinate {m}
+    3.0106;                  !- Vertex 4 Z-coordinate {m}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: PEOPLE ===========
+
+People,
+    zone one people,         !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    Office Occupancy 2,      !- Number of People Schedule Name
+    People/Area,             !- Number of People Calculation Method
+    ,                        !- Number of People
+    0.111,                   !- People per Zone Floor Area {person/m2}
+    ,                        !- Zone Floor Area per Person {m2/person}
+    0.3,                     !- Fraction Radiant
+    ,                        !- Sensible Heat Fraction
+    ActSchd,                 !- Activity Level Schedule Name
+    0.00000008595,           !- Carbon Dioxide Generation Rate {m3/s-W}
+    ,                        !- Enable ASHRAE 55 Comfort Warnings
+    ,                        !- Mean Radiant Temperature Calculation Type
+    ,                        !- Surface Name/Angle Factor List Name
+    ALWAYS 0,                !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule ,      !- Clothing Insulation Calculation Method
+    clothes insulation,             !- Clothing Insulation Calculation Method Schedule Name
+    Fanger;                  !- Clothing Insulation Schedule Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: LIGHTS ===========
+
+Lights,
+    ZONE ONE Lights,         !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    Office Lighting,         !- Schedule Name
+    Watts/Area,              !- Design Level Calculation Method
+    ,                        !- Lighting Level {W}
+    12,                      !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Person {W/person}
+    0,                       !- Return Air Fraction
+    0.45,                    !- Fraction Radiant
+    0.55,                    !- Fraction Visible
+    1,                       !- Fraction Replaceable
+    General,                 !- End-Use Subcategory
+    No;                      !- Return Air Fraction Calculated from Plenum Temperature
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ELECTRICEQUIPMENT ===========
+
+ElectricEquipment,
+    Equipment,               !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    Office HVAC,             !- Schedule Name
+    Watts/Area,              !- Design Level Calculation Method
+    ,                        !- Design Level {W}
+    13.46,                   !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Person {W/person}
+    0,                       !- Fraction Latent
+    0.3,                     !- Fraction Radiant
+    0,                       !- Fraction Lost
+    General;                 !- End-Use Subcategory
+
+
+!-   ===========  ALL OBJECTS IN CLASS: DAYLIGHTING:CONTROLS ===========
+
+Daylighting:Controls,
+    ZONE ONE_DaylCtrl,       !- Name
+    ZONE ONE,                !- Zone Name
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0,                       !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0,                       !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    5,                       !- Number of Stepped Control Steps
+    1,                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZONE ONE_DaylRefPt1,     !- Glare Calculation Daylighting Reference Point Name
+    0,                       !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
+    22,                      !- Maximum Allowable Discomfort Glare Index
+    ,                        !- DElight Gridding Resolution {m2}
+    ZONE ONE_DaylRefPt1,     !- Daylighting Reference Point 1 Name
+    0.5,                     !- Fraction of Zone Controlled by Reference Point 1
+    500,                     !- Illuminance Setpoint at Reference Point 1 {lux}
+    ZONE ONE_DaylRefPt2,     !- Daylighting Reference Point 2 Name
+    0.5,                     !- Fraction of Zone Controlled by Reference Point 2
+    500;                     !- Illuminance Setpoint at Reference Point 2 {lux}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: DAYLIGHTING:REFERENCEPOINT ===========
+
+Daylighting:ReferencePoint,
+    ZONE ONE_DaylRefPt1,     !- Name
+    ZONE ONE,                !- Zone Name
+    1.5,                     !- X-Coordinate of Reference Point {m}
+    1.83,                    !- Y-Coordinate of Reference Point {m}
+    0.8;                     !- Z-Coordinate of Reference Point {m}
+
+Daylighting:ReferencePoint,
+    ZONE ONE_DaylRefPt2,     !- Name
+    ZONE ONE,                !- Zone Name
+    1.5,                     !- X-Coordinate of Reference Point {m}
+    3.66,                    !- Y-Coordinate of Reference Point {m}
+    0.8;                     !- Z-Coordinate of Reference Point {m}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEINFILTRATION:DESIGNFLOWRATE ===========
+
+ZoneInfiltration:DesignFlowRate,
+    infiltration zone 1,     !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    ALWAYS 1,                !- Schedule Name
+    AirChanges/Hour,         !- Design Flow Rate Calculation Method
+    ,                        !- Design Flow Rate {m3/s}
+    ,                        !- Flow per Zone Floor Area {m3/s-m2}
+    ,                        !- Flow per Exterior Surface Area {m3/s-m2}
+    2,                       !- Air Changes per Hour {1/hr}
+    1,                       !- Constant Term Coefficient
+    0,                       !- Temperature Term Coefficient
+    0,                       !- Velocity Term Coefficient
+    0;                       !- Velocity Squared Term Coefficient
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONECONTROL:THERMOSTAT ===========
+
+ZoneControl:Thermostat,
+    ZONE ONE Thermostat,     !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    ALWAYS 4,                !- Control Type Schedule Name
+    ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
+    Office Thermostat Dual SP Control;  !- Control 1 Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: THERMOSTATSETPOINT:DUALSETPOINT ===========
+
+ThermostatSetpoint:DualSetpoint,
+    Office Thermostat Dual SP Control,  !- Name
+    Office Heating Setpoints,!- Heating Setpoint Temperature Schedule Name
+    Office Cooling Setpoints;!- Cooling Setpoint Temperature Schedule Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:IDEALLOADSAIRSYSTEM ===========
+
+ZoneHVAC:IdealLoadsAirSystem,
+    ZONE ONE Purchased Air,  !- Name
+    ALWAYS 1,                !- Availability Schedule Name
+    ZONE ONE Supply Inlet,   !- Zone Supply Air Node Name
+    ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
+    50,                      !- Maximum Heating Supply Air Temperature {C}
+    13,                      !- Minimum Cooling Supply Air Temperature {C}
+    0.0156,                  !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.0077,                  !- Minimum Cooling Supply Air Humidity Ratio {kgWater/kgDryAir}
+    NoLimit,                 !- Heating Limit
+    autosize,                !- Maximum Heating Air Flow Rate {m3/s}
+    ,                        !- Maximum Sensible Heating Capacity {W}
+    NoLimit,                 !- Cooling Limit
+    autosize,                !- Maximum Cooling Air Flow Rate {m3/s}
+    ,                        !- Maximum Total Cooling Capacity {W}
+    ,                        !- Heating Availability Schedule Name
+    ,                        !- Cooling Availability Schedule Name
+    ,                        !- Dehumidification Control Type
+    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    ,                        !- Humidification Control Type
+    ,                        !- Design Specification Outdoor Air Object Name
+    ,                        !- Outdoor Air Inlet Node Name
+    ,                        !- Demand Controlled Ventilation Type
+    ,                        !- Outdoor Air Economizer Type
+    ,                        !- Heat Recovery Type
+    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
+    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTLIST ===========
+
+ZoneHVAC:EquipmentList,
+    ZONE ONE Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
+    ZONE ONE Purchased Air,  !- Zone Equipment 1 Name
+    1,                       !- Zone Equipment 1 Cooling Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTCONNECTIONS ===========
+
+ZoneHVAC:EquipmentConnections,
+    ZONE ONE,                !- Zone Name
+    ZONE ONE Equipment,      !- Zone Conditioning Equipment List Name
+    ZONE ONE Supply Inlet,   !- Zone Air Inlet Node or NodeList Name
+    ,                        !- Zone Air Exhaust Node or NodeList Name
+    ZONE ONE Zone Air Node,  !- Zone Air Node Name
+    ZONE ONE Return Outlet;  !- Zone Return Air Node or NodeList Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:SENSOR ===========
+
+EnergyManagementSystem:Sensor,
+    THMILL,                  !- Name
+    THM_ILL,                 !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    THMDGP,                  !- Name
+    THM_DGP,                 !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    THMlight,                !- Name
+    THM_light,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    Hv,                      !- Name
+    EXTERNAL WALL,           !- Output:Variable or Output:Meter Index Key Name
+    Surface Outside Face Incident Solar Radiation Rate per Area;  !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    THMcontrol,              !- Name
+    BCVTB_THMcontrol,             !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    DGP4,                    !- Name
+    DGP_Tvis4,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    DGP3,                    !- Name
+    DGP_Tvis3,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    DGP2,                    !- Name
+    DGP_Tvis2,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    DGP1,                    !- Name
+    DGP_Tvis1,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    ILL4,                    !- Name
+    ILL_Tvis4,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    ILL3,                    !- Name
+    ILL_Tvis3,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    ILL2,                    !- Name
+    ILL_Tvis2,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    ILL1,                    !- Name
+    ILL_Tvis1,               !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    LightingSchedule,        !- Name
+    Office Lighting,         !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    Occupancy,               !- Name
+    Office Occupancy 2,      !- Output:Variable or Output:Meter Index Key Name
+    Schedule Value;          !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    ELIGHT,                  !- Name
+    ZONE ONE,                !- Output:Variable or Output:Meter Index Key Name
+    Zone Lights Electric Energy;  !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    EHEAT,                   !- Name
+    ZONE ONE Purchased Air,  !- Output:Variable or Output:Meter Index Key Name
+    Zone Ideal Loads Supply Air Sensible Heating Energy;  !- Output:Variable or Output:Meter Name
+
+EnergyManagementSystem:Sensor,
+    ECOOL,                   !- Name
+    ZONE ONE Purchased Air,  !- Output:Variable or Output:Meter Index Key Name
+    Zone Ideal Loads Supply Air Sensible Cooling Energy;  !- Output:Variable or Output:Meter Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:ACTUATOR ===========
+
+EnergyManagementSystem:Actuator,
+    Dimming,                 !- Name
+    ZONE ONE Lights,         !- Actuated Component Unique Name
+    Lights,                  !- Actuated Component Type
+    Electric Power Level;    !- Actuated Component Control Type
+
+EnergyManagementSystem:Actuator,
+    EC_Window,               !- Name
+    Adaptive Glass,          !- Actuated Component Unique Name
+    Surface,                 !- Actuated Component Type
+    Construction State;      !- Actuated Component Control Type
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:PROGRAMCALLINGMANAGER ===========
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate hours,         !- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    Time_Calculation;        !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate UDI,           !- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    UDI_Calculation;         !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate DGP occ,       !- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    DGP_Calculation_occ;     !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate DGP occ cost,  !- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    DGP_Calculation_occ_cost;!- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Light Dimming,           !- Name
+    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
+    Light_Dimming;           !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate DGP,           !- Name
+    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
+    DGP_Calculation;         !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate ILL,           !- Name
+    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
+    ILL_Calculation;         !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate Warmup,        !- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    Warmup_Energy;           !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate Termination,   !- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    Termination_Energy;      !- Program Name 1
+
+!EnergyManagementSystem:ConstructionIndexVariable,
+!    Window_warm,             !- Name
+!    window_warm;             !- Construction Object Name
+EnergyManagementSystem:ProgramCallingManager,
+    Active Window,           !- Name
+    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
+    Active_Window;           !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate Primary Energy,!- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    Primary_Energy;          !- Program Name 1
+
+EnergyManagementSystem:ProgramCallingManager,
+    Calculate PV Energy opt, !- Name
+    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point
+    PV_Energy_opt;           !- Program Name 1
+	
+EnergyManagementSystem:ProgramCallingManager,
+    GetTimelag_Manager,  !- Name
+    AfterPredictorAfterHVACManagers,  !- EnergyPlus Model Calling Point
+    GetTimelag ;        !- Program Name 1
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:PROGRAM ===========
+
+EnergyManagementSystem:Program,
+    Time_Calculation,        !- Name
+    SET n_hrs_sim=1/4,       !- Program Line 1
+    SET n_hrs_occ=0,         !- Program Line 2
+    IF Occupancy>0,          !- A4
+    SET n_hrs_occ=1/4,       !- A5
+    ELSE,                    !- A6
+    SET n_hrs_occ=0,         !- A7
+    ENDIF;                   !- A8
+
+EnergyManagementSystem:Program,
+    UDI_Calculation,         !- Name
+    SET UDIa_uplimit=3000,   !- Program Line 1
+    IF (DayOfYear<=366),     !- Program Line 2
+    SET UDIf=0,              !- A4
+    SET UDIs=0,              !- A5
+    SET UDIa=0,              !- A6
+    SET UDIe=0,              !- A7
+    IF ILLcalc<100 && Occupancy>0,  !- A8
+    SET UDIf=1/4,            !- A9
+    SET UDIs=0,              !- A10
+    SET UDIa=0,              !- A11
+    SET UDIe=0,              !- A12
+    ELSEIF ILLcalc>=100 && ILLcalc<TS,  !- A13
+    SET UDIs=1/4,            !- A14
+    SET UDIf=0,              !- A15
+    SET UDIa=0,              !- A16
+    SET UDIe=0,              !- A17
+    ELSEIF ILLcalc>=TS && ILLcalc<UDIa_uplimit && Occupancy>0,  !- A18
+    SET UDIa=1/4,            !- A19
+    SET UDIf=0,              !- A20
+    SET UDIs=0,              !- A21
+    SET UDIe=0,              !- A22
+    ELSEIF ILLcalc>=UDIa_uplimit && Occupancy>0,  !- A23
+    SET UDIe=1/4,            !- A24
+    SET UDIf=0,              !- A25
+    SET UDIs=0,              !- A26
+    SET UDIa=0,              !- A27
+    ELSE,                    !- A28
+    SET UDIf=0,              !- A29
+    SET UDIs=0,              !- A30
+    SET UDIa=0,              !- A31
+    SET UDIe=0,              !- A32
+    ENDIF,                   !- A33
+    ENDIF;                   !- A34
+
+EnergyManagementSystem:Program,
+    DGP_calculation_occ,     !- Name
+    SET DGP_level=0.35,      !- Program Line 1
+    IF Occupancy>0,          !- Program Line 2
+    SET DGP_occ=DGPcalc/4,   !- A4
+    ELSE,                    !- A5
+    SET DGP_occ=0,           !- A6
+    ENDIF,                   !- A7
+    IF DGP_occ>DGP_level/4 && Occupancy>0 && (DayOfYear<=366),  !- A8
+    SET DGP_occ_passed=1/4,  !- A9
+    ELSE,                    !- A10
+    SET DGP_occ_passed=0,    !- A11
+    ENDIF;                   !- A12
+
+EnergyManagementSystem:Program,
+    DGP_calculation_occ_cost,!- Name
+    SET DGP_level=0.35,      !- Program Line 1
+    IF (DayOfYear<=366),     !- Program Line 2
+    SET DGPoutput_cost=DGPcalc/4,  !- A4
+    SET DGPoutput_cost_occ=DGP_occ,  !- A5
+    SET DGP_occ_cost=DGP_occ_passed,  !- A6
+    ELSE,                    !- A7
+    SET DGP_occ_cost=0,      !- A8
+    ENDIF;                   !- A9
+
+!    SET EC_Window=Window_warm,  !- Program Line 2
+EnergyManagementSystem:Program,
+    Light_Dimming,           !- Name
+    SET TS=320,              !- Program Line 1
+    SET LPD=12,              !- Program Line 2
+    SET Tvis_1=0.238,        !- A4
+    SET Tvis_2=0.341,        !- A5
+    SET Tvis_3=0.446,        !- A6
+    SET Tvis_4=0.595,        !- A7
+    SET LightSch=LightingSchedule,  !- A8
+    SET LightPow=LPD*SF,     !- A9
+    IF (DayOfYear<=365),     !- A10
+	IF ILLcalc < TS,
+    SET Dimming=LightSch*LightPow*(1-ILLcalc/TS),  !- A11
+	ELSEIF ILLcalc >= TS,
+	SET Dimming = 0,
+	ENDIF,
+    ELSE,                    !- A12
+    IF ILL2<TS,              !- A13
+    SET Dimming=LightSch*LightPow*(1-ILL2/TS),  !- A14
+    ENDIF,                   !- A17
+    ENDIF;                   !- A18
+
+EnergyManagementSystem:Program,
+    DGP_calculation,         !- Name
+    SET Tvis_1=0.238,        !- Program Line 1
+    SET Tvis_2=0.341,        !- Program Line 2
+    SET Tvis_3=0.446,        !- A4
+    SET Tvis_4=0.595,        !- A5
+    IF (DayOfYear<=366),     !- A6
+    IF THMcontrol == 1,
+	SET DGPcalc=DGP1,
+	ELSEIF THMcontrol==2,
+	SET DGPcalc=DGP2,
+	ELSEIF THMcontrol==3,
+	SET DGPcalc=DGP3,
+	ELSEIF THMcontrol==4,
+	SET DGPcalc=DGP4,
+	ENDIF,      !- A7
+    ELSE,                    !- A8
+    SET DGPcalc=DGP2,        !- A9
+    ENDIF;                   !- A10
+
+EnergyManagementSystem:Program,
+    ILL_calculation,         !- Name
+    SET Tvis_1=0.238,        !- Program Line 1
+    SET Tvis_2=0.341,        !- Program Line 2
+    SET Tvis_3=0.446,        !- A4
+    SET Tvis_4=0.595,        !- A5
+    IF (DayOfYear<=365),     !- A6
+    IF THMcontrol == 1,
+	SET ILLcalc=ILL1,
+	ELSEIF THMcontrol==2,
+	SET ILLcalc=ILL2,
+	ELSEIF THMcontrol==3,
+	SET ILLcalc=ILL3,
+	ELSEIF THMcontrol==4,
+	SET ILLcalc=ILL4,
+	ENDIF,
+    ELSE,                    !- A8
+    SET ILLcalc=ILL2,        !- A9
+    ENDIF;                   !- A10
+
+EnergyManagementSystem:Program,
+    Warmup_Energy,           !- Name
+    SET etaHeat=3.5,         !- Program Line 1
+    SET SEER=2.5,            !- Program Line 2
+    SET fheat=1,             !- A4
+    SET felec=1,             !- A5
+    SET Epheat=EHEAT/etaHeat*fheat/3600000/SF,  !- A6
+    SET Epcool=ECOOL/SEER*felec/3600000/SF,  !- A7
+    SET Eplight=ELIGHT*felec/3600000/SF,  !- A8
+    SET Warm=Epheat+Epcool+Eplight;  !- A9
+
+EnergyManagementSystem:Program,
+    Termination_Energy,      !- Name
+    SET etaHeat=3.5,         !- Program Line 1
+    SET SEER=2.5,            !- Program Line 2
+    SET fheat=1,             !- A4
+    SET felec=1,             !- A5
+    SET Epheat=EHEAT/etaHeat*fheat/3600000/SF,  !- A6
+    SET Epcool=ECOOL/SEER*felec/3600000/SF,  !- A7
+    SET Eplight=ELIGHT*felec/3600000/SF,  !- A8
+    SET Term=Epheat+Epcool+Eplight;  !- A9
+
+EnergyManagementSystem:Program,
+    Active_Window,           !- Name
+    IF (DayOfYear<=365),     !- Program Line 1
+    SET EC_Window=THMcontrol,!- Program Line 2
+    ELSE,                    !- A4
+    SET EC_Window=2,         !- A5
+    ENDIF;                   !- A6
+
+EnergyManagementSystem:Program,
+    Primary_Energy,          !- Name
+    IF (DayOfYear>=1),       !- Program Line 1
+    SET Gvalue_6_7=0.40545454545454546,  !- Program Line 2
+    SET Tvis_6_7= 0.446,     !- A4
+    SET Gvalue_7_8=0.21636363636363634,  !- A5
+    SET Tvis_7_8=0.238,      !- A6
+    SET Gvalue_8_9=0.31,     !- A7
+    SET Tvis_8_9= 0.341,     !- A8
+    SET Gvalue_9_10=0.21636363636363634,  !- A9
+    SET Tvis_9_10=0.238,     !- A10
+    SET Gvalue_10_11=0.5409090909090909,  !- A11
+    SET Tvis_10_11= 0.595,   !- A12
+    SET Gvalue_11_12=0.5409090909090909,  !- A13
+    SET Tvis_11_12= 0.595,   !- A14
+    SET Gvalue_12_13=0.40545454545454546,  !- A15
+    SET Tvis_12_13= 0.446,   !- A16
+    SET Gvalue_13_14=0.40545454545454546,  !- A17
+    SET Tvis_13_14= 0.446,   !- A18
+    SET Gvalue_14_15=0.31,   !- A19
+    SET Tvis_14_15= 0.341,   !- A20
+    SET Gvalue_15_16=0.40545454545454546,  !- A21
+    SET Tvis_15_16= 0.446,   !- A22
+    SET Gvalue_16_17=0.31,   !- A23
+    SET Tvis_16_17= 0.341,   !- A24
+    SET Gvalue_17_18=0.5409090909090909,  !- A25
+    SET Tvis_17_18= 0.595,   !- A26
+    SET Gvalue_18_19=0.31,   !- A27
+    SET Tvis_18_19= 0.341,   !- A28
+    SET Gvalue_19_20=0.5409090909090909,  !- A29
+    SET Tvis_19_20= 0.595,   !- A30
+    SET Gvalue_20_21=0.40545454545454546,  !- A31
+    SET Tvis_20_21= 0.446,   !- A32
+    SET etaHeat=3.5,         !- A33
+    SET SEER=2.5,            !- A34
+    SET fheat=1,             !- A35
+    SET felec=1,             !- A36
+    SET Epheat_opt=EHEAT/etaHeat*fheat/3600000/SF,  !- A37
+    SET Epcool_opt=ECOOL/SEER*felec/3600000/SF,  !- A38
+    SET Eplight_opt=ELIGHT*felec/3600000/SF,  !- A39
+    SET Z_6_7=Gvalue_6_7/Tvis_6_7,  !- A40
+    SET Z_7_8=Gvalue_7_8/Tvis_7_8,  !- A41
+    SET Z_8_9=Gvalue_8_9/Tvis_8_9,  !- A42
+    SET Z_9_10=Gvalue_9_10/Tvis_9_10,  !- A43
+    SET Z_10_11=Gvalue_10_11/Tvis_10_11,  !- A44
+    SET Z_11_12=Gvalue_11_12/Tvis_11_12,  !- A45
+    SET Z_12_13=Gvalue_12_13/Tvis_12_13,  !- A46
+    SET Z_13_14=Gvalue_13_14/Tvis_13_14,  !- A47
+    SET Z_14_15=Gvalue_14_15/Tvis_14_15,  !- A48
+    SET Z_15_16=Gvalue_15_16/Tvis_15_16,  !- A49
+    SET Z_16_17=Gvalue_16_17/Tvis_16_17,  !- A50
+    SET Z_17_18=Gvalue_17_18/Tvis_17_18,  !- A51
+    SET Z_18_19=Gvalue_18_19/Tvis_18_19,  !- A52
+    SET Z_19_20=Gvalue_19_20/Tvis_19_20,  !- A53
+    SET Z_20_21=Gvalue_20_21/Tvis_20_21,  !- A54
+    IF Z_6_7<0.423,          !- A55
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_6_7/1.085785+0.423*Tvis_6_7/1.085785,  !- A56
+    ELSEIF Z_7_8<0.423,      !- A57
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_7_8/1.085785+0.423*Tvis_7_8/1.085785,  !- A58
+    ELSEIF Z_8_9<0.423,      !- A59
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_8_9/1.085785+0.423*Tvis_8_9/1.085785,  !- A60
+    ELSEIF Z_9_10<0.423,     !- A61
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_9_10/1.085785+0.423*Tvis_9_10/1.085785,  !- A62
+    ELSEIF Z_10_11<0.423,    !- A63
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_10_11/1.085785+0.423*Tvis_10_11/1.085785,  !- A64
+    ELSEIF Z_11_12<0.423,    !- A65
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_11_12/1.085785+0.423*Tvis_11_12/1.085785,  !- A66
+    ELSEIF Z_12_13<0.423,    !- A67
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_12_13/1.085785+0.423*Tvis_12_13/1.085785,  !- A68
+    ELSEIF Z_13_14<0.423,    !- A69
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_13_14/1.085785+0.423*Tvis_13_14/1.085785,  !- A70
+    ELSEIF Z_14_15<0.423,    !- A71
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_14_15/1.085785+0.423*Tvis_14_15/1.085785,  !- A72
+    ELSEIF Z_15_16<0.423,    !- A73
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_15_16/1.085785+0.423*Tvis_15_16/1.085785,  !- A74
+    ELSEIF Z_16_17<0.423,    !- A75
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_16_17/1.085785+0.423*Tvis_16_17/1.085785,  !- A76
+    ELSEIF Z_17_18<0.423,    !- A77
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_17_18/1.085785+0.423*Tvis_17_18/1.085785,  !- A78
+    ELSEIF Z_18_19<0.423,    !- A79
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_18_19/1.085785+0.423*Tvis_18_19/1.085785,  !- A80
+    ELSEIF Z_19_20<0.423,    !- A81
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_19_20/1.085785+0.423*Tvis_19_20/1.085785,  !- A82
+    ELSEIF Z_20_21<0.423,    !- A83
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt-Gvalue_20_21/1.085785+0.423*Tvis_20_21/1.085785,  !- A84
+    ELSE,                    !- A85
+    SET EnergyPrimary=Epheat_opt+Epcool_opt+Eplight_opt,  !- A86
+    ENDIF,                   !- A87
+    ENDIF;                   !- A88
+
+EnergyManagementSystem:Program,
+    PV_Energy_opt,           !- Name
+    SET AF=(3.99-0.01)*(3.0106-0.9),  !- Program Line 1
+    IF (DayOfYear<=365),     !- Program Line 2
+    IF Hv>=850,              !- A4
+    SET PV_Energyopt=Hv*0.041*AF/SF/1000/4,  !- A5
+    ELSEIF Hv>=550,          !- A6
+    SET PV_Energyopt=Hv*0.049*AF/SF/1000/4,  !- A7
+    ELSEIF Hv<550,           !- A8
+    SET PV_Energyopt=Hv*0.043*AF/SF/1000/4,  !- A9
+    ENDIF,                   !- A10
+    ENDIF;                   !- A11
+	
+EnergyManagementSystem:Program,
+    GetTimelag,            !- Name
+    SET currentYear = Year,
+    SET currentMonth = Month,
+    SET currentDayOfMonth = DayOfMonth,
+    SET currentDayOfWeek = DayOfWeek,
+    SET currentTimeOfDay = CurrentTime,
+    SET currentHoliday = Holiday;
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:GLOBALVARIABLE ===========
+
+EnergyManagementSystem:GlobalVariable,
+    currentYear;           !- Year: 1900?2100
+
+EnergyManagementSystem:GlobalVariable,
+    currentMonth;          !- Month: 1-12
+
+EnergyManagementSystem:GlobalVariable,
+    currentDayOfMonth;     !- Day of month (1-31)
+
+EnergyManagementSystem:GlobalVariable,
+    currentDayOfWeek;      !- Day of week (1=Sun, 2=Mon,..., 7=Sat)
+
+EnergyManagementSystem:GlobalVariable,
+    currentTimeOfDay;      !- Current time of day: 0.0 - 24.0 (fractional hours)
+                           !- Another option is using Hour and Minute separately
+
+EnergyManagementSystem:GlobalVariable,
+    currentHoliday;        !- If current day is a holiday
+                           !- 0 if not. 1.0, 2.0, etc., for each type of holiday in model
+
+EnergyManagementSystem:GlobalVariable,
+    n_hrs_occ;               !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    n_hrs_cost;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    n_hrs_cost_occ;          !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    n_hrs_sim;               !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    UDIa_uplimit;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    UDIf;                    !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    UDIs;                    !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    UDIa;                    !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    UDIe;                    !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_1;                  !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_2;                  !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_3;                  !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_4;                  !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    DGP_occ;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    DGP_occ_passed;          !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    DGP_occ_cost;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    DGPoutput_cost;          !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    DGPoutput_cost_occ;      !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    DGP_level;               !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    DGPcalc;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    TS;                      !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    LightPow;                !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    LightSch;                !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    LPD;                     !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    ILLcalc;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Epheat_opt;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Epcool_opt;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Eplight_opt;             !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Term;                    !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Warm;                    !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_night;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_6_7;                   !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_7_8;                   !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_8_9;                   !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_9_10;                  !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_10_11;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_11_12;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_12_13;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_13_14;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_14_15;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_15_16;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_16_17;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_17_18;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_18_19;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_19_20;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Z_20_21;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_night;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_night;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_6_7;                !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_6_7;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_7_8;                !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_7_8;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_8_9;                !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_8_9;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_9_10;               !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_9_10;             !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_10_11;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_10_11;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_11_12;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_11_12;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_12_13;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_12_13;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_13_14;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_13_14;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_14_15;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_14_15;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_15_16;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_15_16;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_16_17;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_16_17;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_17_18;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_17_18;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_18_19;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_18_19;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_19_20;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_19_20;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Tvis_20_21;              !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Gvalue_20_21;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    etaHeat;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    SEER;                    !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    fheat;                   !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    felec;                   !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    C;                       !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Epheat;                  !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Epcool;                  !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    Eplight;                 !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    EnergyPrimary;           !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    PV_Energyopt;            !- Erl Variable 1 Name
+
+EnergyManagementSystem:GlobalVariable,
+    PV_Energyterm;           !- Erl Variable 1 Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:OUTPUTVARIABLE ===========
+
+EnergyManagementSystem:OutputVariable,
+    ECwindow,                !- Name
+    EC_Window,               !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    nhrs_occ,                !- Name
+    n_hrs_occ,               !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    nhrs_cost,               !- Name
+    n_hrs_cost,              !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    nhrs_sim,                !- Name
+    n_hrs_sim,               !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    nhrs_costocc,            !- Name
+    n_hrs_cost_occ,          !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    UDI_f,                   !- Name
+    UDIf,                    !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    UDI_s,                   !- Name
+    UDIs,                    !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    UDI_a,                   !- Name
+    UDIa,                    !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    UDI_e,                   !- Name
+    UDIe,                    !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    DGPocc,                  !- Name
+    DGP_occ,                 !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    DGPoutputcost,           !- Name
+    DGPoutput_cost,          !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    DGPoutputcostocc,        !- Name
+    DGPoutput_cost_occ,      !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    DGPoccpass,              !- Name
+    DGP_occ_passed,          !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    DGPcost,                 !- Name
+    DGP_occ_cost,            !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    Lightdimming,            !- Name
+    Dimming,                 !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    DGPoutput,               !- Name
+    DGPcalc,                 !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    ILLoutput,               !- Name
+    ILLcalc,                 !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    Ep heat,                 !- Name
+    Epheat_opt,              !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    Ep cool,                 !- Name
+    Epcool_opt,              !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    Ep light,                !- Name
+    Eplight_opt,             !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    Termination,             !- Name
+    Term,                    !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    Warmup,                  !- Name
+    Warm,                    !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    Window_status,           !- Name
+    EC_Window,               !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimestep;            !- Update Frequency
+
+EnergyManagementSystem:OutputVariable,
+    Primary energy,          !- Name
+    EnergyPrimary,           !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+
+EnergyManagementSystem:OutputVariable,
+    PV energy opt,           !- Name
+    PV_energyopt,            !- EMS Variable Name
+    Summed,                  !- Type of Data in Variable
+    ZoneTimestep,            !- Update Frequency
+    ,                        !- EMS Program or Subroutine Name
+    kWh/m2;                  !- Units
+	
+EnergyManagementSystem:OutputVariable,
+    currentMonth,  !- Name
+    currentMonth,     !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimeStep;            !- Update Frequency
+
+EnergyManagementSystem:OutputVariable,
+    currentDayOfMonth,  !- Name
+    currentDayOfMonth,     !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimeStep;            !- Update Frequency
+
+EnergyManagementSystem:OutputVariable,
+    currentDayOfWeek,  !- Name
+    currentDayOfWeek,     !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimeStep;            !- Update Frequency
+
+EnergyManagementSystem:OutputVariable,
+    currentTimeOfDay,  !- Name
+    currentTimeOfDay,     !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimeStep;            !- Update Frequency
+
+EnergyManagementSystem:OutputVariable,
+    currentHoliday,  !- Name
+    currentHoliday,     !- EMS Variable Name
+    Averaged,                !- Type of Data in Variable
+    ZoneTimeStep;            !- Update Frequency
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:INTERNALVARIABLE ===========
+
+EnergyManagementSystem:InternalVariable,
+    SF,                      !- Name
+    ZONE ONE,                !- Internal Data Index Key Name
+    Zone Floor Area;         !- Internal Data Type
+
+
+!-   ===========  ALL OBJECTS IN CLASS: ENERGYMANAGEMENTSYSTEM:CONSTRUCTIONINDEXVARIABLE ===========
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_1,                !- Name
+    window1;                 !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_2,                !- Name
+    window2;                 !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_3,                !- Name
+    window3;                 !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_4,                !- Name
+    window4;                 !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_0_3,              !- Name
+    window0_3;               !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_3_6,              !- Name
+    window3_6;               !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_6_7,              !- Name
+    window6_7;               !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_7_8,              !- Name
+    window7_8;               !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_8_9,              !- Name
+    window8_9;               !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_9_10,             !- Name
+    window9_10;              !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_10_11,            !- Name
+    window10_11;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_11_12,            !- Name
+    window11_12;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_12_13,            !- Name
+    window12_13;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_13_14,            !- Name
+    window13_14;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_14_15,            !- Name
+    window14_15;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_15_16,            !- Name
+    window15_16;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_16_17,            !- Name
+    window16_17;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_17_18,            !- Name
+    window17_18;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_18_19,            !- Name
+    window18_19;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_19_20,            !- Name
+    window19_20;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_20_21,            !- Name
+    window20_21;             !- Construction Object Name
+
+EnergyManagementSystem:ConstructionIndexVariable,
+    Window_21_24,            !- Name
+    window21_24;             !- Construction Object Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLEDICTIONARY ===========
+
+Output:VariableDictionary,
+    Regular;                 !- Key Field
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:SURFACES:LIST ===========
+
+Output:Surfaces:List,
+    Details;                 !- Report Type
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:SURFACES:DRAWING ===========
+
+Output:Surfaces:Drawing,
+    DXF;                     !- Report Type
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:CONSTRUCTIONS ===========
+
+Output:Constructions,
+    Constructions;           !- Details Type 1
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:ENERGYMANAGEMENTSYSTEM ===========
+
+Output:EnergyManagementSystem,
+    Verbose,                 !- Actuator Availability Dictionary Reporting
+    Verbose,                 !- Internal Variable Availability Dictionary Reporting
+    Verbose;                 !- EMS Runtime Language Debug Output Level
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:TABLE:SUMMARYREPORTS ===========
+
+Output:Table:SummaryReports,
+    AnnualBuildingUtilityPerformanceSummary,  !- Report 1 Name
+    InputVerificationandResultsSummary,  !- Report 2 Name
+    ClimaticDataSummary,     !- Report 3 Name
+    EnvelopeSummary;         !- Report 4 Name
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUTCONTROL:TABLE:STYLE ===========
+
+OutputControl:Table:Style,
+    HTML;                    !- Column Separator
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLE ===========
+
+Output:Variable,
+	EMS,
+	currentTimeOfDay,
+	Hourly;
+	
+Output:Variable,
+	EMS,
+	currentDayOfWeek,
+	Hourly;
+
+Output:Variable,
+    ZONE ONE,                       !- Key Value
+    Zone Mean Air Temperature,                !- Variable Name
+    Hourly;                  !- Reporting Frequency
+	
+Output:Variable,
+    ZONE ONE,                       !- Key Value
+    Zone People Occupant Count,                !- Variable Name
+    Hourly;                  !- Reporting Frequency
+	
+Output:Variable,
+	*, 
+	Site Outdoor Air Drybulb Temperature, 
+	Hourly;
+	
+Output:Variable,
+	*, 
+	Site Diffuse Solar Radiation Rate per Area, 
+	Hourly;
+	
+Output:Variable,
+	*, 
+	Site Direct Solar Radiation Rate per Area, 
+	Hourly;
+
+Output:Variable,
+    *,                       !- Key Value
+    ECwindow,                !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    ILLoutput,               !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    Primary energy,          !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    Termination,             !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    Warmup,                  !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    Ep heat,                 !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    Ep cool,                 !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    Ep light,                !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    DGPcost,                 !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    DGPoutputcost,           !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    DGPoutputcostocc,        !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    UDI_f,                   !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    UDI_s,                   !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    UDI_a,                   !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    UDI_e,                   !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    nhrs_sim,                !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    nhrs_occ,                !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    PV energy opt,           !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:DIAGNOSTICS ===========
+
+Output:Diagnostics,
+    DisplayExtraWarnings;    !- Key 1
+	
+ExternalInterface,
+    PtolemyServer;           !- Name of External Interface
+
+ExternalInterface:Schedule,
+    BCVTB_THMControl,             !- Name
+    Any Number,             !- Schedule Type Limits Name
+    2;                      !- Initial Value
+
