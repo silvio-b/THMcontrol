@@ -8,19 +8,19 @@ from Agents.TabQ import TabularQLearning
 
 
 selection_type = 0      # 0:'greedy', 1:'softmax', 2:'desc softmax'(not working yet)
-seasons = 1             # 0: no, 1: yes
-occupancy = 0          # 0: no, 1: yes, 2: Rule Based
-n_I_states = 4
-I_levels = 1            # 0: equally distributed, 1: fixed limits (100-250-700)
-n_zoneT_states = 2
+seasons = 0             # 0: no, 1: yes
+occupancy = 1          # 0: no, 1: yes, 2: Rule Based
+n_I_states = 6
+I_levels = 0            # 0: equally distributed, 1: fixed limits (100-250-700)
+n_zoneT_states = 0
 n_extT_states = 0
 
 # TabQ Learning Parameters
-learning_rate = 0.99                                       # Structural parameter
+learning_rate = 1                                       # Structural parameter
 gamma = 0.99                                            # Structural parameter
 n_actions = 4                                           # Structural parameter
-eps = 0.1
-temperature = 1
+eps = 0
+temperature = 0.001
 season = 0
 
 if seasons == 0:

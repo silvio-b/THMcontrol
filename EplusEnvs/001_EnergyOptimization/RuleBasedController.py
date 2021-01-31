@@ -48,17 +48,20 @@ while kStep < MAXSTEPS:
     DAY = output[1]
     OCC = output[6]
     RAD_dir = output[3]
+    RAD_diff = output[4]
+    RAD_dir = RAD_dir + RAD_diff
 
-    if RAD_dir < 250:
-        if RAD_dir < 100:
-            BCVTB_THM_CONTROL = 4
-        else:
-            BCVTB_THM_CONTROL = 3
-    else:
-        if RAD_dir < 700:
-            BCVTB_THM_CONTROL = 2
-        else:
+
+    if RAD_dir > 250:
+        if RAD_dir > 700:
             BCVTB_THM_CONTROL = 1
+        else:
+            BCVTB_THM_CONTROL = 2
+    else:
+        if RAD_dir > 100:
+            BCVTB_THM_CONTROL = 3
+        else:
+            BCVTB_THM_CONTROL = 4
 
     inputs = [BCVTB_THM_CONTROL]
     input_packet = ep.encode_packet_simple(inputs, time)

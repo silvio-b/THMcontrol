@@ -5,8 +5,16 @@ import os
 from Agents.TabQ import TabularQLearning
 from Agents.Spaces import DiscreteSpace
 
-state_breakpoints = [[-10, 0, 250, 500, 1000],
-                    [-10, 10,  20, 26, 40]]
+
+# selection_type = 0      # 0:'greedy', 1:'softmax', 2:'desc softmax'(not working yet)
+# occupancy = 0          # 0: no, 1: yes, 2: Rule Based
+# n_I_states = 4
+# I_levels = 1            # 0: equally distributed, 1: fixed limits (100-250-700)
+# n_zoneT_states = 2
+# n_extT_states = 0
+
+state_breakpoints = [[-10, 100, 250, 500, 1000]]
+                    #[-10, 0, 5, 10, 15, 20, 25, 30, 40]]
 
 StateSpace = DiscreteSpace(breakpoints=state_breakpoints)
 
@@ -16,6 +24,8 @@ n_states = StateSpace.space_dim
 # TabQ Learning Parameters
 learning_rate = 1                                       # Structural parameter
 gamma = 0.5                                            # Structural parameter
+temp = 0.0001
+decay = 0                         #if 0, temp doesn't change
 
 TQL = TabularQLearning(lr=learning_rate,
                        gamma=gamma,
@@ -76,7 +86,7 @@ while kStep < MAXSTEPS:
 
     next_state_index = StateSpace.get_index(values=next_state)
 
-    reward = - EPH - EPC - EPL
+    reward = (- EPH - EPC - EPL) * 100
     rewards.append(reward)
 
 
@@ -85,7 +95,16 @@ while kStep < MAXSTEPS:
                      next_state_index=next_state_index,
                      reward=reward)
 
-    BCVTB_THM_CONTROL = TQL.get_greedy_action(next_state_index)
+    ## decaying temperatute for SOFTMAX, GREEDY in the last period
+    #if temp > 1e-4:
+    #    BCVTB_THM_CONTROL = TQL.get_softmax_action(state_index, temp)
+    #    temp = temp - decay*temp
+    #else:
+    #    BCVTB_THM_CONTROL = TQL.get_greedy_action(next_state_index)
+
+    BCVTB_THM_CONTROL = TQL.get_softmax_action(state_index, temp)
+
+
 
     inputs = [BCVTB_THM_CONTROL + 1]
     input_packet = ep.encode_packet_simple(inputs, time)
