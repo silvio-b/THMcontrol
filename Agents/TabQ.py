@@ -16,9 +16,9 @@ class TabularQLearning:
 
         self.action_space = [i for i in range(0, self.action_space_shape)]
 
-        # self.q_table = np.zeros((self.state_space_shape, self.action_space_shape))
+        self.q_table = np.zeros((self.state_space_shape, self.action_space_shape))
 
-        self.q_table = np.random.randn(self.state_space_shape, self.action_space_shape) * 10
+        #self.q_table = np.random.randn(self.state_space_shape, self.action_space_shape) * 10
 
     def get_greedy_action(self, state_index):
 
